@@ -17,7 +17,7 @@ RUN yum -y install rpm centos-release \
   && yum -y install epel-release initscripts sudo which hostname \
     python3 python3-pip
 
-RUN pip install ansible
+RUN pip3 install ansible
 
 # Disable requiretty.
 RUN sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers
