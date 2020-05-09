@@ -1,22 +1,20 @@
 FROM fedora:31
 ENV container=docker
 
-RUN dnf -y update && dnf clean all
+RUN dnf -y update \
+    && dnf -y install systemd python3-pip sudo which python3-dnf\
+    && dnf clean all
 
-# Enable systemd.
-RUN dnf -y install systemd && dnf clean all && \
-  (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
-  rm -f /lib/systemd/system/multi-user.target.wants/*;\
-  rm -f /etc/systemd/system/*.wants/*;\
-  rm -f /lib/systemd/system/local-fs.target.wants/*; \
-  rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
-  rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
-  rm -f /lib/systemd/system/basic.target.wants/*;\
-  rm -f /lib/systemd/system/anaconda.target.wants/*;
+RUN cd /lib/systemd/system/sysinit.target.wants/; \
+    for i in *; do [ $i = systemd-tmpfiles-setup.service ] || rm -f $i; done
 
-RUN dnf makecache \
-  && dnf -y install python3-pip sudo which python3-dnf \
-  && dnf clean all
+RUN rm -f /lib/systemd/system/multi-user.target.wants/* \
+    /etc/systemd/system/*.wants/* \
+    /lib/systemd/system/local-fs.target.wants/* \
+    /lib/systemd/system/sockets.target.wants/*udev* \
+    /lib/systemd/system/sockets.target.wants/*initctl* \
+    /lib/systemd/system/basic.target.wants/* \
+    /lib/systemd/system/anaconda.target.wants/*
 
 RUN pip3 install ansible
 
@@ -27,5 +25,6 @@ RUN sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers
 RUN mkdir -p /etc/ansible
 RUN echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts
 
-VOLUME ["/sys/fs/cgroup", "/tmp", "/run"]
+
+VOLUME [ "/sys/fs/cgroup" ]
 CMD ["/usr/sbin/init"]
