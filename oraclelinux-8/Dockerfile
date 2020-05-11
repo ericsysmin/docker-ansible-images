@@ -12,9 +12,9 @@ rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
 rm -f /lib/systemd/system/basic.target.wants/*;\
 rm -f /lib/systemd/system/anaconda.target.wants/*;
 
-RUN yum -y install rpm centos-release \
-  && yum -y update \
-  && yum -y install epel-release initscripts sudo which hostname \
+RUN yum -y update \
+  && yum -y install http://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
+  && yum -y install initscripts sudo which hostname \
     python3 python3-pip
 
 RUN pip3 install ansible
