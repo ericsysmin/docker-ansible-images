@@ -1,5 +1,7 @@
 FROM centos:7
 ENV container=docker
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
 
 # Install systemd -- See https://hub.docker.com/_/centos/
 RUN yum -y update; yum clean all; \
