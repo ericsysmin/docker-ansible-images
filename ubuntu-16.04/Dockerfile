@@ -20,7 +20,8 @@ RUN sed -i 's/^\($ModLoad imklog\)/#\1/' /etc/rsyslog.conf
 # Fix potential UTF-8 errors with ansible-test.
 RUN locale-gen en_US.UTF-8
 
-RUN pip install ansible
+RUN pip install --upgrade pip \
+  && pip install ansible
 
 # Install Ansible inventory file.
 RUN mkdir -p /etc/ansible

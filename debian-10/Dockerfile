@@ -10,7 +10,8 @@ RUN apt-get update \
   && rm -Rf /usr/share/doc && rm -Rf /usr/share/man \
   && apt-get clean
 
-RUN pip3 install ansible cryptography
+RUN pip3 install --upgrade pip \
+  && pip3 install ansible cryptography
 
 # Install Ansible inventory file.
 RUN mkdir -p /etc/ansible
