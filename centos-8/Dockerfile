@@ -2,7 +2,7 @@ FROM centos:8
 ENV container=docker
 
 # Handle the switch to CentOS Stream 8
-RUN dnf --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
+RUN dnf -y --disablerepo '*' --enablerepo=extras swap centos-linux-repos centos-stream-repos
 
 # Install systemd -- See https://hub.docker.com/_/centos/
 RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
