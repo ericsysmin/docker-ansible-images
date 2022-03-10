@@ -16,11 +16,19 @@ rm -f /lib/systemd/system/anaconda.target.wants/*;
 
 RUN yum makecache fast \
   && yum -y install deltarpm epel-release initscripts \
-  && yum -y update && yum -y install sudo which python-pip python-cryptography \
+  && yum -y update \
+  && yum -y groupinstall "Development Tools" \
+  && yum -y install wget sudo which gcc openssl-devel libffi-devel bzip2-devel \
   && yum clean all
 
-RUN pip install --upgrade pip \
-  && pip install ansible
+RUN wget https://www.python.org/ftp/python/3.9.10/Python-3.9.10.tgz \
+  && tar xvf Python-3.9.10.tgz \
+  && cd Python-3.9*/ \
+  && ./configure --enable-optimizations \
+  && make altinstall \
+  && cd ~ && rm -rf Python-3.9*
+
+RUN pip3.9 install ansible
 
 # Disable requiretty.
 RUN sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers
